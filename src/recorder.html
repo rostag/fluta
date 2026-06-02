@@ -552,18 +552,13 @@
   .drill-row:hover { background: var(--surface2); }
   .drill-row.playing { background: var(--surface2); color: var(--cream); }
 
-  .drill-base {
-    color: var(--gold);
-    min-width: 2.8rem;
-    font-size: 0.72rem;
-    flex-shrink: 0;
-  }
+  .drill-base { display: none; }
 
   .drill-chain { flex: 1; display: flex; flex-wrap: wrap; align-items: center; gap: 0.25rem; }
 
   .drill-seq-note {
     font-family: 'JetBrains Mono', monospace;
-    font-size: 1.02rem;
+    font-size: 0.82rem;
     color: var(--cream);
     background: var(--surface2);
     border: 1px solid var(--border);
@@ -588,12 +583,12 @@
 
   .drill-play-btn {
     font-family: 'JetBrains Mono', monospace;
-    font-size: 0.6rem;
+    font-size: 0.78rem;
     color: var(--cream-dim);
     background: transparent;
     border: 1px solid var(--border);
     border-radius: 3px;
-    padding: 0.15rem 0.4rem;
+    padding: 0.2rem 0.52rem;
     cursor: pointer;
     transition: all 0.15s ease;
     flex-shrink: 0;

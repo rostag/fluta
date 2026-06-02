@@ -191,10 +191,10 @@ test('Drill note spans exist with correct font size', async ({ page }) => {
   await expect(noteSpans).toHaveCount(4);
 
   const fontSize = await noteSpans.first().evaluate(el => window.getComputedStyle(el).fontSize);
-  // 1.02rem at 16px base = ~16.32px; allow ±1px
+  // 0.82rem at 16px base = ~13.1px; allow ±2px
   const px = parseFloat(fontSize);
-  expect(px).toBeGreaterThan(14);
-  expect(px).toBeLessThan(20);
+  expect(px).toBeGreaterThan(11);
+  expect(px).toBeLessThan(16);
 });
 
 test('Playing a drill row highlights the current note', async ({ page }) => {
