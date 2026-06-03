@@ -1290,6 +1290,22 @@
         return chain;
       }
 
+      function buildChainFull(baseName, baseOct, intervalSteps, length) {
+        length = length === undefined ? 3 : length;
+        const chain = [{ name: baseName, oct: baseOct }];
+        for (let i = 0; i < length; i++) {
+          const cur = chain[chain.length - 1];
+          const up = stepNote(cur.name, cur.oct, intervalSteps);
+          const exists = NOTES.some((n) => n.name === up.name && n.oct === up.oct);
+          if (exists) {
+            chain.push(up);
+          } else {
+            chain.push(stepNote(cur.name, cur.oct, -intervalSteps));
+          }
+        }
+        return chain;
+      }
+
       function build145Chain(baseName, baseOct) {
         return [0, 3, 4, 7].map((offset) => {
           if (offset === 0) return { name: baseName, oct: baseOct };
@@ -1761,6 +1777,7 @@
         drillKey,
         drillLabel,
         chainFn,
+        rowOverrides,
       ) {
         const drillOpen = lsGet(drillKey, false);
 
@@ -1777,8 +1794,11 @@
         let activeDrillBtn = null;
         let activeDrillRow = null;
 
-        DRILL_BASE_NOTES.forEach((base) => {
-          const chain = chainFn(base.name, base.oct);
+        DRILL_BASE_NOTES.forEach((base, idx) => {
+          const chain =
+            rowOverrides && rowOverrides[idx]
+              ? rowOverrides[idx]
+              : chainFn(base.name, base.oct);
 
           const row = document.createElement("div");
           row.className = "drill-row";
@@ -1947,6 +1967,10 @@
 
           if (DRILL_INTERVALS[ex.name] !== undefined) {
             const intervalSteps = DRILL_INTERVALS[ex.name];
+            const overrides =
+              ex.name === "Терції"
+                ? [buildChainFull("Ре", 1, 2, 8)]
+                : undefined;
             const { stopDrills } = appendDrillPanel(
               card,
               staffWrap,
@@ -1955,6 +1979,7 @@
               "recorder_drill_" + ex.name,
               DRILL_NAMES[ex.name],
               (name, oct) => buildChain(name, oct, intervalSteps),
+              overrides,
             );
             drillStoppers.push(stopDrills);
           }

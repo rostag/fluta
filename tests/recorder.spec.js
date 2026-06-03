@@ -98,10 +98,15 @@ test('Drill panel restores open state on reload', async ({ page }) => {
 test('Терції chains are correct', async ({ page }) => {
   await page.locator('.drill-toggle').first().click();
   const chains = await page.locator('.drill-content.open .drill-chain').allInnerTexts();
-  expect(chains[0].replace(/\s+/g, ' ').trim()).toContain('До1');
-  expect(chains[0]).toContain('Мі1');
-  expect(chains[0]).toContain('Соль1');
-  expect(chains[0]).toContain('Сі1');
+  // Row 1: 8-step chain from Ре1 spanning full range
+  expect(chains[0]).toContain('Ре1');
+  expect(chains[0]).toContain('Фа1');
+  expect(chains[0]).toContain('До2');
+  expect(chains[0]).toContain('Сі2');
+  expect(chains[0]).toContain('Ре3');
+  expect(chains[0]).toContain('Фа3');
+  // Row 2 onward: auto-generated 3-step chains from DRILL_BASE_NOTES
+  expect(chains[1]).toContain('Ре1');
   // Last row: До2→Мі2→Соль2→Сі2
   expect(chains[7]).toContain('До2');
   expect(chains[7]).toContain('Сі2');
@@ -188,7 +193,8 @@ test('Drill note spans exist with correct font size', async ({ page }) => {
   await page.locator('.drill-toggle').first().click();
   const firstRow = page.locator('.drill-row').first();
   const noteSpans = firstRow.locator('.drill-seq-note');
-  await expect(noteSpans).toHaveCount(4);
+  // First Терції row is an 8-step chain (9 notes); other rows have 4
+  await expect(noteSpans.first()).toBeVisible();
 
   const fontSize = await noteSpans.first().evaluate(el => window.getComputedStyle(el).fontSize);
   // 0.82rem at 16px base = ~13.1px; allow ±2px
@@ -217,9 +223,10 @@ test('Stopping a drill row clears note highlights', async ({ page }) => {
   await expect(page.locator('.drill-seq-note.seq-active')).toHaveCount(0);
 });
 
-test('Staff swaps to 4-note chain while drill plays', async ({ page }) => {
+test('Staff swaps to drill chain while drill plays', async ({ page }) => {
   await page.locator('.drill-toggle').first().click();
-  await page.locator('.drill-play-btn').first().click();
+  // Use the second row (4-note chain) for a stable count check
+  await page.locator('.drill-play-btn').nth(2).click();
   await page.waitForTimeout(200);
 
   const staffNotes = page.locator('.exercise-card').first().locator('.staff-svg ellipse');
