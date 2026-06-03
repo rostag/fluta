@@ -98,15 +98,16 @@ test('Drill panel restores open state on reload', async ({ page }) => {
 test('Терції chains are correct', async ({ page }) => {
   await page.locator('.drill-toggle').first().click();
   const chains = await page.locator('.drill-content.open .drill-chain').allInnerTexts();
-  // Row 1: 8-step chain from Ре1 spanning full range
-  expect(chains[0]).toContain('Ре1');
-  expect(chains[0]).toContain('Фа1');
-  expect(chains[0]).toContain('До2');
-  expect(chains[0]).toContain('Сі2');
-  expect(chains[0]).toContain('Ре3');
-  expect(chains[0]).toContain('Фа3');
-  // Row 2 onward: auto-generated 3-step chains from DRILL_BASE_NOTES
+  // Row 1: 6-step chain from До1
+  expect(chains[0]).toContain('До1');
+  expect(chains[0]).toContain('Мі1');
+  expect(chains[0]).toContain('Соль1');
+  expect(chains[0]).toContain('Сі1');
+  expect(chains[0]).toContain('Ля2');
+  // Row 2: 6-step chain from Ре1
   expect(chains[1]).toContain('Ре1');
+  expect(chains[1]).toContain('Фа1');
+  expect(chains[1]).toContain('Сі2');
   // Last row: До2→Мі2→Соль2→Сі2
   expect(chains[7]).toContain('До2');
   expect(chains[7]).toContain('Сі2');
@@ -225,8 +226,8 @@ test('Stopping a drill row clears note highlights', async ({ page }) => {
 
 test('Staff swaps to drill chain while drill plays', async ({ page }) => {
   await page.locator('.drill-toggle').first().click();
-  // Use the second row (4-note chain) for a stable count check
-  await page.locator('.drill-play-btn').nth(2).click();
+  // Use row 3 (first auto-generated 4-note chain); rows 1+2 are custom 6-step
+  await page.locator('.drill-play-btn').nth(4).click();
   await page.waitForTimeout(200);
 
   const staffNotes = page.locator('.exercise-card').first().locator('.staff-svg ellipse');

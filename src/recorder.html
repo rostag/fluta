@@ -1296,8 +1296,7 @@
         for (let i = 0; i < length; i++) {
           const cur = chain[chain.length - 1];
           const up = stepNote(cur.name, cur.oct, intervalSteps);
-          const exists = NOTES.some((n) => n.name === up.name && n.oct === up.oct);
-          if (exists) {
+          if (noteInRange(up.name, up.oct)) {
             chain.push(up);
           } else {
             chain.push(stepNote(cur.name, cur.oct, -intervalSteps));
@@ -1969,7 +1968,7 @@
             const intervalSteps = DRILL_INTERVALS[ex.name];
             const overrides =
               ex.name === "Терції"
-                ? [buildChainFull("Ре", 1, 2, 8)]
+                ? [buildChainFull("До", 1, 2, 6), buildChainFull("Ре", 1, 2, 6)]
                 : undefined;
             const { stopDrills } = appendDrillPanel(
               card,
